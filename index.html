@@ -11,6 +11,7 @@
          gap:1.5rem; padding:1rem; box-sizing:border-box; background:var(--bg); color:var(--fg);
          font-family:system-ui,sans-serif; text-align:center; }
   h1 { margin:0; }
+  #setup { white-space:pre-line; }
   #joke { background:var(--card); border-radius:1rem; padding:1.5rem; max-width:32rem; width:100%;
           min-height:6rem; box-shadow:0 4px 16px #0002; font-size:1.25rem; box-sizing:border-box; }
   #punch { font-weight:700; color:var(--accent); margin-top:.75rem; min-height:1.5em; }
@@ -55,14 +56,18 @@ const jokes = [
   ["I got a job at a bakery.", "I knead the dough."],
   ["Why did the coffee file a police report?", "It got mugged."],
 ];
-// Add r/dadjokes top posts when Reddit is reachable; built-in jokes stay as fallback.
-// ponytail: client-side fetch, no key; if Reddit blocks/rate-limits, silently uses built-ins.
+// Add r/dadjokes top posts when Reddit is reachable; else icanhazdadjoke.com; built-ins always stay.
+// ponytail: client-side fetch, no key; page 1-25 hardcoded (744 jokes/30 per page), fix if the API grows.
 fetch("https://www.reddit.com/r/dadjokes/top.json?t=year&limit=100")
   .then(r => r.ok ? r.json() : Promise.reject(r.status))
   .then(d => d.data.children.map(c => c.data)
     .filter(p => !p.over_18 && !p.stickied && p.selftext && p.selftext.length < 200)
     .forEach(p => jokes.push([p.title, p.selftext.trim()])))
-  .catch(() => {});
+  .catch(() => fetch(`https://icanhazdadjoke.com/search?limit=30&page=${1 + Math.floor(Math.random() * 25)}`,
+      { headers: { Accept: "application/json" } })
+    .then(r => r.json())
+    .then(d => d.results.forEach(j => jokes.push([j.joke, ""])))
+    .catch(() => {}));
 let last = -1;
 const setup = document.getElementById("setup"), punch = document.getElementById("punch");
 let timer;
