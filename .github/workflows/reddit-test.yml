@@ -1,0 +1,7 @@
+name: reddit-test
+on: workflow_dispatch
+jobs:
+  t:
+    runs-on: ubuntu-latest
+    steps:
+      - run: curl -s -o /dev/null -w "HTTP %{http_code}\n" -A "dadjoke-page/0.1" "https://www.reddit.com/r/dadjokes/top.json?t=year&limit=5"
