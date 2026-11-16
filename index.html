@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dad Joke Machine</title>
+<style>
+  :root { --bg:#fff8e7; --fg:#2b2b2b; --card:#fff; --accent:#e4572e; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#1c1a17; --fg:#f2ede4; --card:#2a2723; --accent:#ff7a54; } }
+  body { margin:0; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center;
+         gap:1.5rem; padding:1rem; box-sizing:border-box; background:var(--bg); color:var(--fg);
+         font-family:system-ui,sans-serif; text-align:center; }
+  h1 { margin:0; }
+  #joke { background:var(--card); border-radius:1rem; padding:1.5rem; max-width:32rem; width:100%;
+          min-height:6rem; box-shadow:0 4px 16px #0002; font-size:1.25rem; box-sizing:border-box; }
+  #punch { font-weight:700; color:var(--accent); margin-top:.75rem; min-height:1.5em; }
+  button { font-size:1.25rem; padding:.8rem 1.6rem; border:0; border-radius:2rem; background:var(--accent);
+           color:#fff; cursor:pointer; }
+  button:hover { filter:brightness(1.1); }
+  button:focus-visible { outline:3px solid var(--fg); outline-offset:3px; }
+</style>
+</head>
+<body>
+<h1>👨 Dad Joke Machine</h1>
+<div id="joke" aria-live="polite">
+  <div id="setup">Press the button for a terrible joke.</div>
+  <div id="punch"></div>
+</div>
+<button id="btn">Tell me a joke</button>
+<script>
+const jokes = [
+  ["I'm reading a book about anti-gravity.", "It's impossible to put down."],
+  ["Why don't skeletons fight each other?", "They don't have the guts."],
+  ["What do you call fake spaghetti?", "An impasta."],
+  ["Why did the scarecrow win an award?", "He was outstanding in his field."],
+  ["I only know 25 letters of the alphabet.", "I don't know y."],
+  ["What do you call a fish with no eyes?", "A fsh."],
+  ["Why can't you trust atoms?", "They make up everything."],
+  ["I used to hate facial hair.", "But then it grew on me."],
+  ["What do you call cheese that isn't yours?", "Nacho cheese."],
+  ["Why did the bicycle fall over?", "It was two tired."],
+  ["I'm afraid for the calendar.", "Its days are numbered."],
+  ["What did the ocean say to the beach?", "Nothing, it just waved."],
+  ["Why do melons have weddings?", "Because they cantaloupe."],
+  ["How does a penguin build its house?", "Igloos it together."],
+  ["I told my wife she was drawing her eyebrows too high.", "She looked surprised."],
+  ["What's brown and sticky?", "A stick."],
+  ["Did you hear about the restaurant on the moon?", "Great food, no atmosphere."],
+  ["Why did the math book look sad?", "It had too many problems."],
+  ["What do you call a bear with no teeth?", "A gummy bear."],
+  ["I would tell you a construction joke...", "But I'm still working on it."],
+  ["Why don't eggs tell jokes?", "They'd crack each other up."],
+  ["What did the left eye say to the right eye?", "Between us, something smells."],
+  ["How do you organize a space party?", "You planet."],
+  ["I got a job at a bakery.", "I knead the dough."],
+  ["Why did the coffee file a police report?", "It got mugged."],
+];
+let last = -1;
+const setup = document.getElementById("setup"), punch = document.getElementById("punch");
+let timer;
+document.getElementById("btn").onclick = () => {
+  let i;
+  do { i = Math.floor(Math.random() * jokes.length); } while (i === last);
+  last = i;
+  clearTimeout(timer);
+  setup.textContent = jokes[i][0];
+  punch.textContent = "";
+  timer = setTimeout(() => punch.textContent = jokes[i][1], 1200);
+};
+</script>
+</body>
+</html>
